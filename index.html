@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Poster Menu — Full Menu</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Anton:wght@400&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-peach: #6B6940; /* outer page */
+    --card-cream: #fff8f4; /* poster panels */
+    --accent: #284728; /* dark green */
+    --muted: #7a6a66;
+    --grid-line: rgba(0,0,0,0.06);
+  }
+
+  /* Page */
+  html,body{height:100%;overflow:hidden;}
+  body{
+    margin:0;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--bg-peach);
+    font-family: 'Lora', serif;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* Layout container holds one poster panel */
+  .poster-wrap{
+    display:grid;
+    grid-template-columns: 750px;
+    gap:36px;
+    padding:36px;
+    align-items:start;
+    justify-content:center;
+    position:relative;
+  }
+
+  /* Poster card (the cream panels) */
+  .poster{
+    width:750px;
+    height:900px;
+    background:var(--card-cream);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    position:relative;
+    padding:40px 40px;
+    box-sizing:border-box;
+    border: 1px solid rgba(0,0,0,0.03);
+    overflow:hidden;
+  }
+
+  /* subtle square grid background inside each poster using repeating gradients */
+  .poster::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 48px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 48px);
+    opacity:0.9;
+    pointer-events:none;
+  }
+
+  /* Headings styling */
+  .title{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:40px;
+    color:var(--accent);
+    margin:6px 0 8px 0;
+    letter-spacing: -1px;
+    z-index:2;
+    position:relative;
+  }
+
+  /* Section headings */
+  .section-title{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:40px;
+    color:var(--accent);
+    margin:12px 0 8px 0;
+    z-index:2;
+    position:relative;
+  }
+
+  /* Each small grid item (dish box) */
+  .item{
+    position:relative;
+    z-index:2;
+    padding:8px 6px;
+    margin:6px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+
+  .item h4{
+    margin:0;
+    font-size:14px;
+    font-weight:700;
+    color:#2b2b2b;
+    letter-spacing:0.2px;
+  }
+  .item p{
+    margin:4px 0 0 0;
+    font-size:12px;
+    color:var(--muted);
+    max-width:70%;
+    line-height:1.2;
+  }
+  .price{
+    display:none;
+  }
+
+  /* small decorative stamp / round numbers */
+  .stamp{
+    border:2px solid var(--accent);
+    color:var(--accent);
+    font-weight:700;
+    font-size:12px;
+    padding:6px 8px;
+    border-radius:999px;
+    display:inline-block;
+  }
+
+  /* columns inside poster */
+  .cols{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:10px;
+    z-index:2;
+    position:relative;
+  }
+
+  /* small caption boxes */
+  .red-box{
+    background:rgba(40,71,40,0.06);
+    border-left:4px solid var(--accent);
+    padding:8px 10px;
+    font-size:13px;
+    color:var(--accent);
+    font-weight:700;
+    display:inline-block;
+    margin:6px 0;
+  }
+
+  /* thin divider lines */
+  .divider{
+    height:1px;
+    background:rgba(0,0,0,0.06);
+    margin:8px 0;
+  }
+
+  /* footer small note */
+  .note{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:18px;
+    z-index:2;
+    position:relative;
+  }
+
+  /* responsive */
+  @media (max-width:820px){
+    .poster-wrap{grid-template-columns: 1fr; padding:24px;}
+    .poster{width:100%; max-width:750px; margin:0 auto;}
+  }
+
+  /* Navigation arrows */
+  .nav-arrow{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(255,255,255,0.9);
+    border:2px solid var(--accent);
+    border-radius:50%;
+    width:60px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:1000;
+    transition:all 0.3s ease;
+    font-size:24px;
+    color:var(--accent);
+    font-weight:bold;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .nav-arrow:hover{
+    background:var(--accent);
+    color:white;
+    transform:translateY(-50%) scale(1.1);
+  }
+
+  .nav-left{
+    left:20px;
+  }
+
+  .nav-right{
+    right:20px;
+  }
+
+  /* subtle decorative corner marks */
+  .poster .corner{
+    position:absolute;
+    width:60px;
+    height:60px;
+    border:3px solid rgba(0,0,0,0.04);
+    top:18px;
+    right:18px;
+    transform:rotate(-12deg);
+    z-index:1;
+  }
+
+  /* grid number */
+  .grid-number{
+    font-size:11px;
+    color:var(--muted);
+    border:1px solid rgba(0,0,0,0.03);
+    padding:6px 8px;
+    border-radius:4px;
+    background:rgba(0,0,0,0.01);
+    display:inline-block;
+    margin-left:8px;
+  }
+
+  /* Restaurant name */
+  .restaurant-name{
+    position:absolute;
+    top:18px;
+    left:40px;
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    font-size:28px;
+    color:var(--accent);
+    z-index:3;
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- Navigation Arrows -->
+  <div class="nav-arrow nav-left" onclick="switchPoster('prev')">‹</div>
+  <div class="nav-arrow nav-right" onclick="switchPoster('next')">›</div>
+
+  <div class="poster-wrap">
+
+    <!-- BREAKFAST POSTER -->
+    <article class="poster" id="poster1" aria-labelledby="left-title">
+      <div class="corner" aria-hidden="true"></div>
+      <div class="restaurant-name">La tierra</div>
+
+      <header style="margin-top:40px;">
+        <div style="display:flex;align-items:baseline;gap:12px;">
+          <h2 id="left-title" class="section-title">Breakfast</h2>
+        </div>
+      </header>
+
+      <section style="position:relative;z-index:2">
+        <div class="cols" style="margin-top:8px;grid-template-columns: 1fr 1fr;gap:14px;">
+          <div>
+            <div class="item">
+              <div>
+                <h4>Bulletproof Breakfast Thali</h4>
+                <p>Sunny-side-up eggs with coconut oil, rice bread, avocado, sweet potato, and blueberries.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 515 | Protein: 30g | Fat: 32g</p>
+              </div>
+              <div class="price">₹650</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Scrambled Eggs & Avocado</h4>
+                <p>Scrambled eggs in coconut oil with spinach, avocado, and rice bread.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 520 | Protein: 23g | Fat: 36g</p>
+              </div>
+              <div class="price">₹580</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Poached Eggs Plate</h4>
+                <p>Poached eggs over steamed spinach and mashed sweet potato.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 460 | Protein: 27g | Fat: 31g</p>
+              </div>
+              <div class="price">₹520</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Breakfast Sandwich</h4>
+                <p>Toasted rice bread layered with soft omelette, sliced avocado, and ghee — warm, creamy, and balanced for a clean morning bite.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 470 | Protein: 28g | Carbs: 26g | Fat: 28g | Fiber: 5g</p>
+              </div>
+              <div class="price">₹420</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Avocado Whey Smoothie</h4>
+                <p>Velvety blend of ripe avocado, whey isolate, and melted cocoa butter, gently sweetened with stevia for rich morning fuel.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 500 | Protein: 32g | Carbs: 10g | Fat: 35g | Fiber: 7g</p>
+              </div>
+              <div class="price">₹520</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="item">
+              <div>
+                <h4>Breakfast Tacos</h4>
+                <p>Delicate rice-flour tacos filled with fluffy scrambled eggs, diced zucchini, and ghee, topped with lime and coriander.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 495 | Protein: 26g | Carbs: 28g | Fat: 29g | Fiber: 6g</p>
+              </div>
+              <div class="price">₹480</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Omelette with Vegetables</h4>
+                <p>Fluffy omelette in coconut oil with steamed carrots and zucchini.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 495 | Protein: 28g | Fat: 32g</p>
+              </div>
+              <div class="price">₹540</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Avocado Toast</h4>
+                <p>Mashed avocado on rice bread topped with sliced boiled eggs.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 480 | Protein: 22g | Fat: 30g</p>
+              </div>
+              <div class="price">₹460</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Banana Whey Smoothie</h4>
+                <p>Silky blend of ripe banana, whey isolate, and cocoa butter, finished with coconut oil and stevia — clean and perfectly balanced.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 495 | Protein: 32g | Carbs: 17g | Fat: 34g | Fiber: 4g</p>
+              </div>
+              <div class="price">₹510</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <div style="font-weight:700;color:var(--accent);font-size:14px">Health</div>
+            <div class="note">Fresh ingredients. Ask staff about allergens.</div>
+          </div>
+          <div style="text-align:right">
+            <div class="grid-number">No. 12</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:8px">Edition · 2025</div>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- LUNCH POSTER -->
+    <article class="poster" id="poster2" aria-labelledby="lunch-title" style="display:none;">
+      <div class="corner" aria-hidden="true"></div>
+      <div class="restaurant-name">La tierra</div>
+
+      <header style="margin-top:40px;">
+        <h2 id="lunch-title" class="section-title" style="margin:0">Lunch</h2>
+      </header>
+
+      <section style="position:relative;z-index:2;margin-top:8px">
+        <div class="cols" style="grid-template-columns: 1fr 1fr;gap:14px;">
+          <div>
+            <div class="item" style="border-top:none;padding-top:0">
+              <div>
+                <h4>Seared Duck Breast Salad</h4>
+                <p>Pink duck breast over mixed greens with fig vinaigrette and goat cheese.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 450 | Protein: 32g | Fat: 28g</p>
+              </div>
+              <div class="price">₹720</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Lobster Risotto</h4>
+                <p>Creamy Arborio rice with fresh lobster, saffron, and micro herbs.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 520 | Protein: 28g | Fat: 22g</p>
+              </div>
+              <div class="price">₹810</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Quinoa Power Bowl</h4>
+                <p>Tri-color quinoa with roasted vegetables, avocado, and tahini dressing.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 380 | Protein: 16g | Fat: 14g</p>
+              </div>
+              <div class="price">₹480</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Chicken Caesar Salad</h4>
+                <p>Grilled chicken breast over crisp romaine with parmesan and caesar dressing.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 420 | Protein: 38g | Fat: 22g</p>
+              </div>
+              <div class="price">₹460</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Fish & Chips</h4>
+                <p>Beer-battered cod with hand-cut fries and mushy peas.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 680 | Protein: 32g | Fat: 38g</p>
+              </div>
+              <div class="price">₹580</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Margherita Pizza</h4>
+                <p>Wood-fired pizza with fresh mozzarella, basil, and San Marzano tomatoes.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 520 | Protein: 24g | Fat: 18g</p>
+              </div>
+              <div class="price">₹420</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="item" style="border-top:none;padding-top:0">
+              <div>
+                <h4>Grilled Salmon Bowl</h4>
+                <p>Atlantic salmon with quinoa, roasted vegetables, and lemon herb dressing.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 520 | Protein: 42g | Fat: 28g</p>
+              </div>
+              <div class="price">₹680</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Mediterranean Wrap</h4>
+                <p>Grilled chicken, hummus, cucumber, tomatoes in whole wheat tortilla.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 450 | Protein: 35g | Fat: 18g</p>
+              </div>
+              <div class="price">₹420</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Asian Fusion Salad</h4>
+                <p>Mixed greens, edamame, sesame-crusted tofu with ginger dressing.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 380 | Protein: 22g | Fat: 24g</p>
+              </div>
+              <div class="price">₹460</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Pasta Primavera</h4>
+                <p>Fresh linguine with seasonal vegetables in light garlic olive oil.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 420 | Protein: 16g | Fat: 14g</p>
+              </div>
+              <div class="price">₹380</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Turkey Club Sandwich</h4>
+                <p>Roasted turkey, avocado, bacon, lettuce on artisan sourdough.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 580 | Protein: 38g | Fat: 26g</p>
+              </div>
+              <div class="price">₹520</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Vegetarian Buddha Bowl</h4>
+                <p>Roasted chickpeas, sweet potato, kale with tahini dressing.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 440 | Protein: 18g | Fat: 20g</p>
+              </div>
+              <div class="price">₹400</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="note">Fresh ingredients • Lunch specialties • Edition 2025</div>
+        </div>
+      </section>
+    </article>
+
+    <!-- DINNER POSTER -->
+    <article class="poster" id="poster3" aria-labelledby="dinner-title" style="display:none;">
+      <div class="corner" aria-hidden="true"></div>
+      <div class="restaurant-name">La tierra</div>
+
+      <header style="margin-top:40px;">
+        <h2 id="dinner-title" class="section-title" style="margin:0">Dinner</h2>
+      </header>
+
+      <section style="position:relative;z-index:2;margin-top:8px">
+        <div class="cols" style="grid-template-columns: 1fr 1fr;gap:14px;">
+          <div>
+            <div class="item" style="border-top:none;padding-top:0">
+              <div>
+                <h4>Dry-Aged Ribeye</h4>
+                <p>28-day dry-aged ribeye with roasted bone marrow and red wine jus.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 680 | Protein: 52g | Fat: 28g</p>
+              </div>
+              <div class="price">₹810</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Chilean Sea Bass</h4>
+                <p>Pan-seared sea bass with miso glaze and forbidden black rice.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 480 | Protein: 38g | Fat: 22g</p>
+              </div>
+              <div class="price">₹720</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Lamb Rack</h4>
+                <p>Herb-crusted lamb rack with rosemary jus and roasted root vegetables.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 620 | Protein: 48g | Fat: 32g</p>
+              </div>
+              <div class="price">₹920</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Pan-Seared Halibut</h4>
+                <p>Fresh halibut with lemon butter sauce and seasonal vegetables.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 480 | Protein: 42g | Fat: 22g</p>
+              </div>
+              <div class="price">₹780</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Wagyu Beef Tenderloin</h4>
+                <p>Premium wagyu with truffle mashed potatoes and red wine reduction.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 720 | Protein: 55g | Fat: 38g</p>
+              </div>
+              <div class="price">₹1200</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Surf & Turf</h4>
+                <p>Grilled lobster tail with filet mignon, garlic butter, and asparagus.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 820 | Protein: 58g | Fat: 42g</p>
+              </div>
+              <div class="price">₹1350</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="item" style="border-top:none;padding-top:0">
+              <div>
+                <h4>Mushroom Wellington</h4>
+                <p>Wild mushroom duxelles in flaky pastry with port reduction.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 420 | Protein: 14g | Fat: 16g</p>
+              </div>
+              <div class="price">₹650</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Grilled Himalayan Trout</h4>
+                <p>Grilled trout with sautéed spinach and mashed sweet potato.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 540 | Protein: 44g | Fat: 24g</p>
+              </div>
+              <div class="price">₹680</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Stuffed Portobello</h4>
+                <p>Portobello mushroom stuffed with quinoa, herbs, and goat cheese.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 380 | Protein: 18g | Fat: 16g</p>
+              </div>
+              <div class="price">₹560</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Duck Confit</h4>
+                <p>Slow-cooked duck leg with garlic potatoes and cherry gastrique.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 640 | Protein: 46g | Fat: 34g</p>
+              </div>
+              <div class="price">₹850</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Lobster Thermidor</h4>
+                <p>Classic lobster thermidor with gruyere cheese and herb crust.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 580 | Protein: 38g | Fat: 28g</p>
+              </div>
+              <div class="price">₹980</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <div class="red-box">Chef's Special</div>
+        </div>
+
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="note">Exquisite dining • Evening specialties • Edition 2025</div>
+        </div>
+      </section>
+    </article>
+
+    <!-- SPICES & SEASONINGS POSTER -->
+    <article class="poster" id="poster4" aria-labelledby="spices-title" style="display:none;">
+      <div class="corner" aria-hidden="true"></div>
+      <div class="restaurant-name">La tierra</div>
+
+      <header style="margin-top:40px;">
+        <div style="display:flex;align-items:baseline;gap:12px;">
+          <h2 id="spices-title" class="section-title">Spices & Seasonings</h2>
+        </div>
+      </header>
+
+      <section style="position:relative;z-index:2">
+        <div class="cols" style="margin-top:8px">
+          <div>
+            <div class="item">
+              <div>
+                <h4>Lamb Rogan Josh</h4>
+                <p>Slow-braised lamb in aromatic tomato and yogurt curry with Kashmiri chilies.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 420 | Protein: 35g | Carbs: 18g | Fat: 24g</p>
+              </div>
+              <div class="price">₹720</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Thai Green Curry</h4>
+                <p>Coconut milk curry with thai basil, eggplant, and your choice of protein.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 380 | Protein: 28g | Carbs: 15g | Fat: 26g</p>
+              </div>
+              <div class="price">₹650</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Moroccan Tagine</h4>
+                <p>Slow-cooked chicken with apricots, almonds, and warm Moroccan spices.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 450 | Protein: 38g | Carbs: 22g | Fat: 24g</p>
+              </div>
+              <div class="price">₹780</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Indian Butter Chicken</h4>
+                <p>Tender chicken in rich tomato and cream sauce with garam masala.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 480 | Protein: 42g | Carbs: 16g | Fat: 28g</p>
+              </div>
+              <div class="price">₹720</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Mexican Mole Poblano</h4>
+                <p>Chicken in complex mole sauce with chocolate, chilies, and 20+ spices.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 520 | Protein: 36g | Carbs: 20g | Fat: 32g</p>
+              </div>
+              <div class="price">₹820</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Ethiopian Doro Wat</h4>
+                <p>Spicy chicken stew with berbere spice blend and hard-boiled eggs.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 460 | Protein: 40g | Carbs: 14g | Fat: 26g</p>
+              </div>
+              <div class="price">₹750</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Lebanese Kibbeh</h4>
+                <p>Traditional lamb and bulgur croquettes with pine nuts and seven spices.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 380 | Protein: 28g | Carbs: 18g | Fat: 22g</p>
+              </div>
+              <div class="price">₹680</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <div style="font-weight:700;color:var(--accent);font-size:14px">Authentic Spices</div>
+            <div class="note">Traditional recipes with aromatic spices and seasonings.</div>
+          </div>
+          <div style="text-align:right">
+            <div class="grid-number">No. 13</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:8px">Edition · 2025</div>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- SMOOTHIES & DRINKS POSTER -->
+    <article class="poster" id="poster5" aria-labelledby="smoothies-title" style="display:none;">
+      <div class="corner" aria-hidden="true"></div>
+      <div class="restaurant-name">La tierra</div>
+
+      <header style="margin-top:40px;">
+        <div style="display:flex;align-items:baseline;gap:12px;">
+          <h2 id="smoothies-title" class="section-title">Smoothies</h2>
+        </div>
+      </header>
+
+      <section style="position:relative;z-index:2">
+        <div class="cols" style="margin-top:8px">
+          <div>
+            <div class="item">
+              <div>
+                <h4>Green Goddess</h4>
+                <p>Spinach, avocado, mango, coconut water, and lime with a hint of mint.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 140 | Protein: 3g | Carbs: 24g | Fat: 6g</p>
+              </div>
+              <div class="price">₹340</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Avocado Whey Smoothie</h4>
+                <p>Creamy avocado blend with whey isolate, finished with sea salt and olive oil.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 500 | Protein: 32g | Fat: 35g | Fiber: 7g</p>
+              </div>
+              <div class="price">₹520</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Banana Whey Smoothie</h4>
+                <p>Silky banana blend with whey isolate and cocoa butter, sweetened with stevia.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 495 | Protein: 32g | Fat: 34g | Fiber: 4g</p>
+              </div>
+              <div class="price">₹510</div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="section-title">Wellness Drinks</h2>
+        <div class="cols">
+          <div>
+            <div class="item">
+              <div>
+                <h4>Turmeric Ginger Green Tea</h4>
+                <p>Premium green tea infused with fresh turmeric and ginger for anti-inflammatory benefits.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 5 | Antioxidants: High</p>
+              </div>
+              <div class="price">₹210</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Traditional Buttermilk</h4>
+                <p>Cultured buttermilk with live probiotics, seasoned with Himalayan salt and herbs.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 99 | Protein: 8g | Probiotics: Active</p>
+              </div>
+              <div class="price">₹250</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Apple Cider Vinegar Tonic</h4>
+                <p>Raw apple cider vinegar with honey and lemon for metabolic support.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 25 | Acetic Acid: 5%</p>
+              </div>
+              <div class="price">₹180</div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="note">Fresh daily • Pure ingredients • Edition 2025</div>
+          <div class="red-box">House Special</div>
+        </div>
+      </section>
+    </article>
+
+    <!-- DESSERTS POSTER -->
+    <article class="poster" id="poster6" aria-labelledby="desserts-title" style="display:none;">
+      <div class="corner" aria-hidden="true"></div>
+      <div class="restaurant-name">La tierra</div>
+
+      <header style="margin-top:40px;">
+        <div style="display:flex;align-items:baseline;gap:12px;">
+          <h2 id="desserts-title" class="section-title">Desserts</h2>
+        </div>
+      </header>
+
+      <section style="position:relative;z-index:2">
+        <div class="cols" style="margin-top:8px">
+          <div>
+            <div class="item">
+              <div>
+                <h4>Chocolate Soufflé</h4>
+                <p>Warm dark chocolate soufflé with vanilla bean ice cream and gold leaf.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 320 | Protein: 8g | Carbs: 42g | Fat: 18g</p>
+              </div>
+              <div class="price">₹480</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Crème Brûlée</h4>
+                <p>Classic vanilla bean custard with caramelized sugar and fresh berries.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 280 | Protein: 6g | Carbs: 32g | Fat: 14g</p>
+              </div>
+              <div class="price">₹420</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Tiramisu</h4>
+                <p>Classic Italian dessert with coffee-soaked ladyfingers, mascarpone, and cocoa dust.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 295 | Protein: 7g | Carbs: 28g | Fat: 16g</p>
+              </div>
+              <div class="price">₹450</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Seasonal Fruit Tart</h4>
+                <p>Buttery pastry shell filled with vanilla custard and topped with fresh seasonal fruits.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 240 | Protein: 4g | Carbs: 35g | Fat: 12g</p>
+              </div>
+              <div class="price">₹380</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Dark Chocolate Tart</h4>
+                <p>Rich dark chocolate ganache in a crispy almond crust with gold flakes.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 340 | Protein: 6g | Carbs: 30g | Fat: 22g</p>
+              </div>
+              <div class="price">₹520</div>
+            </div>
+
+            <div class="item">
+              <div>
+                <h4>Lemon Posset</h4>
+                <p>Silky smooth lemon cream dessert with shortbread crumble and candied lemon zest.</p>
+                <p style="font-size:11px;color:var(--accent);margin:4px 0 0 0;font-weight:600">Cal: 210 | Protein: 3g | Carbs: 22g | Fat: 14g</p>
+              </div>
+              <div class="price">₹350</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="note">Artfully crafted • Sweet endings • Edition 2025</div>
+          <div class="red-box">Sweet Treats</div>
+        </div>
+      </section>
+    </article>
+
+  </div>
+
+  <script>
+    let currentPoster = 1;
+    const totalPosters = 6;
+
+    function switchPoster(direction) {
+      // Hide current poster
+      document.getElementById('poster' + currentPoster).style.display = 'none';
+      
+      // Calculate next poster
+      if (direction === 'next') {
+        currentPoster = currentPoster === totalPosters ? 1 : currentPoster + 1;
+      } else {
+        currentPoster = currentPoster === 1 ? totalPosters : currentPoster - 1;
+      }
+      
+      // Show new poster
+      document.getElementById('poster' + currentPoster).style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
