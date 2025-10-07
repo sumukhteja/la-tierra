@@ -281,8 +281,15 @@
     /* Mobile hover override for arrows */
     .nav-arrow:hover {
       transform: none !important;
-      background: var(--accent);
-      color: white;
+      background: var(--accent) !important;
+      color: white !important;
+    }
+
+    /* Mobile active/click state for arrows */
+    .nav-arrow:active {
+      background: var(--accent) !important;
+      color: white !important;
+      transform: none !important;
     }
 
     /* Corner decoration - hide on mobile */
