@@ -254,23 +254,34 @@
       margin: 4px 0;
     }
 
-    /* Navigation arrows - smaller and repositioned */
+    /* Navigation arrows - bottom positioned line style */
     .nav-arrow {
-      width: 25px;
-      height: 25px;
-      font-size: 10px;
-      top: 15px;
+      width: 40px;
+      height: 30px;
+      font-size: 12px;
+      bottom: 20px;
+      top: auto;
       transform: none;
       position: fixed;
       z-index: 9999;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--accent);
     }
 
     .nav-left {
-      left: 10px;
+      left: 20px;
     }
 
     .nav-right {
-      right: 10px;
+      right: 20px;
+    }
+
+    /* Mobile hover override for arrows */
+    .nav-arrow:hover {
+      transform: none !important;
+      background: var(--accent);
+      color: white;
     }
 
     /* Corner decoration - hide on mobile */
@@ -963,7 +974,7 @@
           </div>
         </div>
 
-        <h2 class="section-title">Wellness Drinks</h2>
+        <h2 class="section-title" style="margin-top:16px;">Wellness Drinks</h2>
         <div class="cols">
           <div>
             <div class="item">
