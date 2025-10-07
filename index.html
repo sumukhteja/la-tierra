@@ -31,6 +31,20 @@
     -moz-osx-font-smoothing:grayscale;
   }
 
+  /* Mobile scroll fix */
+  @media (max-width: 768px) {
+    html, body {
+      height: auto;
+      min-height: 100vh;
+      overflow: visible;
+    }
+    
+    body {
+      align-items: flex-start;
+      padding: 16px 0;
+    }
+  }
+
   /* Layout container holds one poster panel */
   .poster-wrap{
     display:grid;
@@ -169,16 +183,13 @@
 
   /* Mobile Responsive */
   @media (max-width: 768px) {
-    body {
-      overflow: auto;
-      height: auto;
-      min-height: 100vh;
-    }
-
     .poster-wrap {
       grid-template-columns: 1fr;
-      padding: 16px;
+      padding: 80px 16px 16px 16px;
       gap: 20px;
+      align-items: stretch;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
     .poster {
@@ -187,8 +198,9 @@
       height: auto;
       min-height: auto;
       margin: 0;
-      padding: 20px 16px;
+      padding: 20px 16px 40px 16px;
       box-sizing: border-box;
+      overflow: visible;
     }
 
     /* Restaurant name - smaller and repositioned */
@@ -198,7 +210,7 @@
       left: 0;
       font-size: 20px;
       margin-bottom: 16px;
-      text-align: center;
+      text-align: left;
     }
 
     /* Headers - smaller margins */
@@ -209,7 +221,7 @@
     /* Titles - smaller font */
     .section-title {
       font-size: 28px !important;
-      text-align: center;
+      text-align: left;
       margin: 8px 0 !important;
     }
 
@@ -241,11 +253,13 @@
 
     /* Navigation arrows - smaller and repositioned */
     .nav-arrow {
-      width: 50px;
-      height: 50px;
-      font-size: 20px;
-      top: 60px;
+      width: 35px;
+      height: 35px;
+      font-size: 14px;
+      top: 15px;
       transform: none;
+      position: fixed;
+      z-index: 9999;
     }
 
     .nav-left {
