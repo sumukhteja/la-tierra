@@ -205,9 +205,9 @@
 
     /* Restaurant name - smaller and repositioned */
     .restaurant-name {
-      position: relative;
-      top: 0;
-      left: 0;
+      position: relative !important;
+      top: 0 !important;
+      left: 0 !important;
       font-size: 20px;
       margin-bottom: 16px;
       text-align: left;
@@ -225,6 +225,7 @@
       font-size: 28px !important;
       text-align: left;
       margin: 8px 0 !important;
+      padding-left: 0 !important;
     }
 
     /* Grid layouts - single column on mobile */
@@ -256,25 +257,25 @@
 
     /* Navigation arrows - bottom positioned line style */
     .nav-arrow {
-      width: 40px;
-      height: 30px;
-      font-size: 12px;
-      bottom: 20px;
+      width: 50px;
+      height: 35px;
+      font-size: 14px;
+      bottom: 15px;
       top: auto;
       transform: none;
       position: fixed;
       z-index: 9999;
-      border-radius: 4px;
+      border-radius: 6px;
       background: rgba(255,255,255,0.95);
-      border: 1px solid var(--accent);
+      border: 2px solid var(--accent);
     }
 
     .nav-left {
-      left: 20px;
+      left: 15px;
     }
 
     .nav-right {
-      right: 20px;
+      right: 15px;
     }
 
     /* Mobile hover override for arrows */
