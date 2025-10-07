@@ -231,6 +231,7 @@
     .cols {
       grid-template-columns: 1fr !important;
       gap: 8px !important;
+      padding-left: 8px;
     }
 
     /* Items - better mobile spacing */
@@ -307,9 +308,23 @@
     /* Flex layouts on mobile */
     div[style*="display:flex"] {
       flex-direction: column !important;
-      align-items: center !important;
+      align-items: flex-start !important;
       gap: 8px !important;
+      text-align: left !important;
+      padding-left: 8px !important;
+    }
+
+    /* Specific fix for headers with flex wrappers */
+    header div[style*="display:flex"] {
+      padding-left: 0 !important;
+    }
+
+    /* Specific fix for bottom flex containers */
+    section div[style*="display:flex"]:not(header div) {
+      flex-direction: column !important;
+      align-items: center !important;
       text-align: center !important;
+      padding-left: 0 !important;
     }
   }
 
